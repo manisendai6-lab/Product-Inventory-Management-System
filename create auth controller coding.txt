@@ -1,0 +1,110 @@
+1️⃣ Project Structure Example
+project/
+│
+├── controllers/
+│   └── authController.js
+│
+├── routes/
+│   └── authRoutes.js
+│
+├── models/
+│   └── userModel.js
+│
+└── server.js
+2️⃣ Create Auth Controller File
+
+Create file:
+
+controllers/authController.js
+
+Example coding:
+
+// controllers/authController.js
+
+let users = [];
+
+// Register User
+exports.registerUser = (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: "All fields required" });
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    username,
+    password
+  };
+
+  users.push(newUser);
+
+  res.status(201).json({
+    message: "User registered successfully",
+    user: newUser
+  });
+};
+
+
+// Login User
+exports.loginUser = (req, res) => {
+  const { username, password } = req.body;
+
+  const user = users.find(
+    u => u.username === username && u.password === password
+  );
+
+  if (!user) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  res.json({
+    message: "Login successful",
+    user
+  });
+};
+3️⃣ Create Routes for Auth
+
+File:
+
+routes/authRoutes.js
+const express = require("express");
+const router = express.Router();
+
+const authController = require("../controllers/authController");
+
+router.post("/register", authController.registerUser);
+router.post("/login", authController.loginUser);
+
+module.exports = router;
+4️⃣ Connect Routes to Server
+
+Example server.js
+
+const express = require("express");
+const app = express();
+
+const authRoutes = require("./routes/authRoutes");
+
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+5️⃣ API Endpoints
+Method	Endpoint	Description
+POST	/api/auth/register	Register user
+POST	/api/auth/login	Login user
+
+Example request:
+
+POST /api/auth/register
+
+Body:
+
+{
+  "username": "john",
+  "password": "123456"
+}

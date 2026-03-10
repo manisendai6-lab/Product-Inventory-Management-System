@@ -1,0 +1,92 @@
+1️⃣ What Routes Do
+
+Example request flow:
+
+Client Request → Route → Controller → Response
+
+Routes connect API endpoints to controller functions.
+
+2️⃣ Project Structure Example
+project/
+│
+├── controllers/
+│   ├── productController.js
+│
+├── routes/
+│   ├── productRoutes.js
+│
+└── server.js
+3️⃣ Create Routes File
+
+Create file:
+
+routes/productRoutes.js
+
+Example coding:
+
+const express = require("express");
+const router = express.Router();
+
+const productController = require("../controllers/productController");
+
+router.get("/", productController.getProducts);
+router.get("/:id", productController.getProductById);
+router.post("/", productController.createProduct);
+router.put("/:id", productController.updateProduct);
+router.delete("/:id", productController.deleteProduct);
+
+module.exports = router;
+
+Explanation:
+
+router.get() → Retrieve data
+
+router.post() → Create data
+
+router.put() → Update data
+
+router.delete() → Delete data
+
+4️⃣ Connect Routes in Server
+
+Example server.js
+
+const express = require("express");
+const app = express();
+
+const productRoutes = require("./routes/productRoutes");
+
+app.use(express.json());
+
+app.use("/api/products", productRoutes);
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+
+Now API endpoints become:
+
+GET    /api/products
+GET    /api/products/:id
+POST   /api/products
+PUT    /api/products/:id
+DELETE /api/products/:id
+5️⃣ Example Auth Routes
+
+File:
+
+routes/authRoutes.js
+const express = require("express");
+const router = express.Router();
+
+const authController = require("../controllers/authController");
+
+router.post("/register", authController.registerUser);
+router.post("/login", authController.loginUser);
+
+module.exports = router;
+
+Endpoints:
+
+POST /api/auth/register
+POST /api/auth/login
